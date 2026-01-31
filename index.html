@@ -24,20 +24,23 @@
             padding-top: 20px;
         }
 
-        /* --- Logo Styles --- */
+        /* --- Logo Styles (Base/Desktop Default) --- */
         .psu-logo {
-            width: 1200px;
+            width: 120px; /* Default Desktop Size */
             height: auto;
-            margin-bottom: 20px; /* Pushes title down on mobile */
+            margin-bottom: 0;
+            position: absolute;
+            top: 20px;
+            left: 20px;
         }
 
         /* --- Typography --- */
         h1 {
             margin: 0;
-            font-size: 2.5rem;
+            font-size: 3rem; /* Desktop Size */
             letter-spacing: 2px;
             text-transform: uppercase;
-            color: #001E44; /* Penn State Nittany Navy */
+            color: #001E44; 
             text-align: center;
             line-height: 1.1;
         }
@@ -51,7 +54,7 @@
             text-align: center;
         }
 
-        /* --- Input Section --- */
+        /* --- Input & Result Sections --- */
         .input-group {
             width: 100%;
             display: flex;
@@ -62,8 +65,8 @@
 
         input {
             padding: 15px;
-            font-size: 1.2rem; /* Prevents auto-zoom on iOS */
-            width: 80%; /* Responsive width */
+            font-size: 1.2rem;
+            width: 80%;
             max-width: 250px;
             text-align: center;
             border: 2px solid #001E44;
@@ -78,14 +81,13 @@
             box-shadow: 0 0 8px rgba(30, 64, 124, 0.3);
         }
 
-        /* --- Result Box --- */
         .result-box {
             margin-top: 10px;
             padding: 20px;
             border: 1px solid #001E44;
             border-radius: 8px;
             background-color: rgba(255, 255, 255, 0.95);
-            width: 85%; /* Responsive width */
+            width: 85%;
             max-width: 300px;
             display: none;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -101,14 +103,8 @@
             padding-bottom: 2px;
         }
         
-        .coord-row:last-child {
-            border-bottom: none;
-        }
-
-        .coord-row span:first-child {
-            font-weight: bold;
-            color: #001E44;
-        }
+        .coord-row:last-child { border-bottom: none; }
+        .coord-row span:first-child { font-weight: bold; color: #001E44; }
 
         .error {
             color: #D50032;
@@ -118,23 +114,20 @@
             font-size: 0.9rem;
         }
 
-        /* --- Desktop/Tablet Specifics (Media Query) --- */
-        @media (min-width: 768px) {
+        /* --- MOBILE SPECIFIC STYLES --- */
+        @media (max-width: 767px) {
             body {
-                padding-top: 50px;
+                padding-top: 15px;
             }
-            
-            /* On desktop, pin logo to top left */
+
             .psu-logo {
-                position: absolute;
-                top: 20px;
-                left: 20px;
-                margin-bottom: 0;
-                width: 100px;
+                position: static; /* Remove absolute positioning on mobile */
+                width: 20px;      /* REQUESTED SIZE */
+                margin-bottom: 10px; /* Reduced margin for smaller logo */
             }
 
             h1 {
-                font-size: 3rem;
+                font-size: 2.2rem; /* Smaller title on mobile */
             }
         }
     </style>
@@ -178,9 +171,7 @@
 
             let indx, indy;
 
-            // Logic: 010 -> x=0, y=10
             if (input.length >= 2) {
-                // Ensure inputs are numbers before parsing
                 if (!/^\d+$/.test(input)) {
                      errorMsg.style.display = 'block';
                      resultBox.style.display = 'none';
@@ -189,7 +180,7 @@
                 indx = parseInt(input.substring(0, 1));
                 indy = parseInt(input.substring(1));
             } else {
-                return; // Wait for more input
+                return; 
             }
 
             if (isNaN(indx) || isNaN(indy)) {
