@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Das Group Calculator - Penn State</title>
+    <style>
+        /* --- Base Styles --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            
+            /* REPLACE 'background.jpg' with your actual file name */
+            background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('mri.png');
+            
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            min-height: 100vh;
+            padding-top: 20px;
+        }
+
+        /* --- Logo Styles --- */
+        .psu-logo {
+            width: 1200px;
+            height: auto;
+            margin-bottom: 20px; /* Pushes title down on mobile */
+        }
+
+        /* --- Typography --- */
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #001E44; /* Penn State Nittany Navy */
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            margin-top: 5px;
+            color: #555;
+            font-size: 1.1rem;
+            font-weight: normal;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* --- Input Section --- */
+        .input-group {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 15px;
+            font-size: 1.2rem; /* Prevents auto-zoom on iOS */
+            width: 80%; /* Responsive width */
+            max-width: 250px;
+            text-align: center;
+            border: 2px solid #001E44;
+            border-radius: 8px;
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.95);
+            transition: box-shadow 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #1E407C;
+            box-shadow: 0 0 8px rgba(30, 64, 124, 0.3);
+        }
+
+        /* --- Result Box --- */
+        .result-box {
+            margin-top: 10px;
+            padding: 20px;
+            border: 1px solid #001E44;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.95);
+            width: 85%; /* Responsive width */
+            max-width: 300px;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .coord-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 1.1rem;
+            border-bottom: 1px dashed #ddd;
+            padding-bottom: 2px;
+        }
+        
+        .coord-row:last-child {
+            border-bottom: none;
+        }
+
+        .coord-row span:first-child {
+            font-weight: bold;
+            color: #001E44;
+        }
+
+        .error {
+            color: #D50032;
+            margin-top: 10px;
+            display: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* --- Desktop/Tablet Specifics (Media Query) --- */
+        @media (min-width: 768px) {
+            body {
+                padding-top: 50px;
+            }
+            
+            /* On desktop, pin logo to top left */
+            .psu-logo {
+                position: absolute;
+                top: 20px;
+                left: 20px;
+                margin-bottom: 0;
+                width: 100px;
+            }
+
+            h1 {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <img src="primary-vertical-1-marks.png" alt="Penn State Logo" class="psu-logo">
+
+    <h1>DAS GROUP</h1>
+    <div class="subtitle">svg marker coordinate calculator</div>
+
+    <div class="input-group">
+        <input type="tel" id="cellInput" placeholder="Enter Cell (e.g. 010)" autofocus oninput="calculate()">
+        <div id="errorMsg" class="error">Invalid cell number</div>
+    </div>
+
+    <div id="resultBox" class="result-box">
+        <div class="coord-row"><span>xmin:</span> <span id="xmin"></span></div>
+        <div class="coord-row"><span>xmax:</span> <span id="xmax"></span></div>
+        <div class="coord-row"><span>ymin:</span> <span id="ymin"></span></div>
+        <div class="coord-row"><span>ymax:</span> <span id="ymax"></span></div>
+    </div>
+
+    <script>
+        function calculate() {
+            const input = document.getElementById('cellInput').value.trim();
+            const resultBox = document.getElementById('resultBox');
+            const errorMsg = document.getElementById('errorMsg');
+            
+            if (input === "") {
+                resultBox.style.display = 'none';
+                errorMsg.style.display = 'none';
+                return;
+            }
+
+            // Define Parameters
+            const x_start = -4200;
+            const y_start = -4200;
+            const dx = 400;
+            const dy = 400;
+
+            let indx, indy;
+
+            // Logic: 010 -> x=0, y=10
+            if (input.length >= 2) {
+                // Ensure inputs are numbers before parsing
+                if (!/^\d+$/.test(input)) {
+                     errorMsg.style.display = 'block';
+                     resultBox.style.display = 'none';
+                     return;
+                }
+                indx = parseInt(input.substring(0, 1));
+                indy = parseInt(input.substring(1));
+            } else {
+                return; // Wait for more input
+            }
+
+            if (isNaN(indx) || isNaN(indy)) {
+                errorMsg.style.display = 'block';
+                resultBox.style.display = 'none';
+                return;
+            }
+
+            errorMsg.style.display = 'none';
+
+            const xmin = (2 * indx * dx) + x_start;
+            const xmax = xmin + dx;
+            const ymin = (2 * indy * dy) + y_start;
+            const ymax = ymin + dy;
+
+            document.getElementById('xmin').innerText = xmin.toFixed(2);
+            document.getElementById('xmax').innerText = xmax.toFixed(2);
+            document.getElementById('ymin').innerText = ymin.toFixed(2);
+            document.getElementById('ymax').innerText = ymax.toFixed(2);
+            
+            resultBox.style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
