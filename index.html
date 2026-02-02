@@ -5,13 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Das Group Calculator - Penn State</title>
     <style>
-        /* --- Base Styles --- */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            
-            /* REPLACE 'background.jpg' with your actual file name */
+            /* Update 'background.jpg' to your local file path */
             background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('mri.png');
-            
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -21,114 +18,52 @@
             align-items: center;
             margin: 0;
             min-height: 100vh;
-            padding-top: 20px;
+            padding: 20px;
         }
 
-        /* --- Logo Styles (Base/Desktop Default) --- */
+        /* Desktop Logo: Large and pinned to top-left */
         .psu-logo {
-            width: 120px; /* Default Desktop Size */
+            width: 280px;
             height: auto;
-            margin-bottom: 0;
             position: absolute;
             top: 20px;
             left: 20px;
         }
 
-        /* --- Typography --- */
-        h1 {
-            margin: 0;
-            font-size: 3rem; /* Desktop Size */
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #001E44; 
-            text-align: center;
-            line-height: 1.1;
-        }
-
-        .subtitle {
-            margin-top: 5px;
-            color: #555;
-            font-size: 1.1rem;
-            font-weight: normal;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        /* --- Input & Result Sections --- */
-        .input-group {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+        h1 { margin: 0; font-size: 3rem; letter-spacing: 2px; text-transform: uppercase; color: #001E44; text-align: center; }
+        .subtitle { margin-top: 5px; color: #555; font-size: 1.1rem; margin-bottom: 30px; }
 
         input {
-            padding: 15px;
-            font-size: 1.2rem;
-            width: 80%;
-            max-width: 250px;
-            text-align: center;
-            border: 2px solid #001E44;
-            border-radius: 8px;
-            outline: none;
-            background-color: rgba(255, 255, 255, 0.95);
-            transition: box-shadow 0.3s ease;
-        }
-
-        input:focus {
-            border-color: #1E407C;
-            box-shadow: 0 0 8px rgba(30, 64, 124, 0.3);
+            padding: 15px; font-size: 1.2rem; width: 85%; max-width: 320px; text-align: center;
+            border: 2px solid #001E44; border-radius: 8px; outline: none; background: white;
         }
 
         .result-box {
-            margin-top: 10px;
-            padding: 20px;
-            border: 1px solid #001E44;
-            border-radius: 8px;
-            background-color: rgba(255, 255, 255, 0.95);
-            width: 85%;
-            max-width: 300px;
-            display: none;
+            margin-top: 20px; padding: 20px; border: 1px solid #001E44; border-radius: 8px;
+            background: rgba(255, 255, 255, 0.95); width: 85%; max-width: 320px; display: none;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        .coord-row {
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 0;
-            font-family: "Courier New", Courier, monospace;
-            font-size: 1.1rem;
-            border-bottom: 1px dashed #ddd;
-            padding-bottom: 2px;
-        }
-        
-        .coord-row:last-child { border-bottom: none; }
+        .coord-row { display: flex; justify-content: space-between; margin: 10px 0; font-family: monospace; font-size: 1.1rem; border-bottom: 1px dashed #ddd; }
         .coord-row span:first-child { font-weight: bold; color: #001E44; }
 
-        .error {
-            color: #D50032;
-            margin-top: 10px;
-            display: none;
-            font-weight: bold;
-            font-size: 0.9rem;
+        .history-container {
+            margin-top: 30px; width: 85%; max-width: 320px;
+            background: rgba(255, 255, 255, 0.85); border-radius: 8px; padding: 15px;
+            border: 1px solid #001E44; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
+        .history-title { font-weight: bold; margin-bottom: 10px; color: #001E44; text-align: center; border-bottom: 2px solid #001E44; padding-bottom: 5px; }
+        .history-item { font-size: 0.8rem; font-family: monospace; margin-bottom: 8px; padding: 5px; background: #fff; border-radius: 4px; border-left: 3px solid #001E44; }
 
-        /* --- MOBILE SPECIFIC STYLES --- */
+        /* Mobile Specific Styles */
         @media (max-width: 767px) {
-            body {
-                padding-top: 15px;
+            .psu-logo { 
+                position: static; 
+                width: 20px; /* Requested size for mobile */
+                margin-bottom: 10px; 
             }
-
-            .psu-logo {
-                position: static; /* Remove absolute positioning on mobile */
-                width: 120px;      /* REQUESTED SIZE */
-                margin-bottom: 10px; /* Reduced margin for smaller logo */
-            }
-
-            h1 {
-                font-size: 2.2rem; /* Smaller title on mobile */
-            }
+            h1 { font-size: 2.2rem; }
+            .subtitle { font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -139,10 +74,7 @@
     <h1>DAS GROUP</h1>
     <div class="subtitle">svg marker coordinate calculator</div>
 
-    <div class="input-group">
-        <input type="tel" id="cellInput" placeholder="Enter Cell (e.g. 010)" autofocus oninput="calculate()">
-        <div id="errorMsg" class="error">Invalid cell number</div>
-    </div>
+    <input type="text" id="cellInput" placeholder="Cell or Bridge (e.g. 09_110)" autofocus onkeydown="if(event.key==='Enter') calculate()">
 
     <div id="resultBox" class="result-box">
         <div class="coord-row"><span>xmin:</span> <span id="xmin"></span></div>
@@ -151,61 +83,70 @@
         <div class="coord-row"><span>ymax:</span> <span id="ymax"></span></div>
     </div>
 
+    <div class="history-container">
+        <div class="history-title">RECENT HISTORY</div>
+        <div id="historyList"></div>
+    </div>
+
     <script>
+        let historyLog = [];
+
+        function getCoords(cellStr) {
+            // Your defined parameters
+            const x_start = -4200, y_start = -4200, dx = 400, dy = 400;
+            const xIdx = parseInt(cellStr.substring(0, 1));
+            const yIdx = parseInt(cellStr.substring(1));
+            const xmin = (2 * xIdx * dx) + x_start;
+            const ymin = (2 * yIdx * dy) + y_start;
+            return { xmin, xmax: xmin + dx, ymin, ymax: ymin + dy };
+        }
+
         function calculate() {
             const input = document.getElementById('cellInput').value.trim();
-            const resultBox = document.getElementById('resultBox');
-            const errorMsg = document.getElementById('errorMsg');
-            
-            if (input === "") {
-                resultBox.style.display = 'none';
-                errorMsg.style.display = 'none';
-                return;
-            }
+            if (!input) return;
 
-            // Define Parameters
-            const x_start = -4200;
-            const y_start = -4200;
-            const dx = 400;
-            const dy = 400;
-
-            let indx, indy;
-
-            if (input.length >= 2) {
-                if (!/^\d+$/.test(input)) {
-                     errorMsg.style.display = 'block';
-                     resultBox.style.display = 'none';
-                     return;
+            try {
+                let final;
+                // Bridge logic: Left_Right, Bottom_Top, or Diagonal
+                if (input.includes('_')) {
+                    const parts = input.split('_');
+                    const c1 = getCoords(parts[0]);
+                    const c2 = getCoords(parts[1]);
+                    final = { 
+                        xmin: (c1.xmin + c2.xmin)/2, 
+                        xmax: (c1.xmax + c2.xmax)/2, 
+                        ymin: (c1.ymin + c2.ymin)/2, 
+                        ymax: (c1.ymax + c2.ymax)/2 
+                    };
+                } else {
+                    final = getCoords(input);
                 }
-                indx = parseInt(input.substring(0, 1));
-                indy = parseInt(input.substring(1));
-            } else {
-                return; 
+
+                // Update UI Display
+                document.getElementById('xmin').innerText = final.xmin.toFixed(1);
+                document.getElementById('xmax').innerText = final.xmax.toFixed(1);
+                document.getElementById('ymin').innerText = final.ymin.toFixed(1);
+                document.getElementById('ymax').innerText = final.ymax.toFixed(1);
+                document.getElementById('resultBox').style.display = 'block';
+
+                // Add to history
+                updateHistory(input, final);
+                
+                // Clear input for next entry
+                document.getElementById('cellInput').value = '';
+            } catch (e) { 
+                alert("Invalid input format. Use '010' or '09_110'."); 
             }
+        }
 
-            if (isNaN(indx) || isNaN(indy)) {
-                errorMsg.style.display = 'block';
-                resultBox.style.display = 'none';
-                return;
-            }
-
-            errorMsg.style.display = 'none';
-
-            const xmin = (2 * indx * dx) + x_start;
-            const xmax = xmin + dx;
-            const ymin = (2 * indy * dy) + y_start;
-            const ymax = ymin + dy;
-
-            document.getElementById('xmin').innerText = xmin.toFixed(2);
-            document.getElementById('xmax').innerText = xmax.toFixed(2);
-            document.getElementById('ymin').innerText = ymin.toFixed(2);
-            document.getElementById('ymax').innerText = ymax.toFixed(2);
+        function updateHistory(name, coords) {
+            const entryText = `<strong>${name}</strong><br>X: ${coords.xmin} | Y: ${coords.ymin}`;
+            historyLog.unshift(entryText);
+            if (historyLog.length > 5) historyLog.pop(); // Keep only last 5
             
-            resultBox.style.display = 'block';
+            const list = document.getElementById('historyList');
+            list.innerHTML = historyLog.map(item => `<div class="history-item">${item}</div>`).join('');
         }
     </script>
-
 </body>
 </html>
-
-
